@@ -15,9 +15,14 @@ class ElementAttribute {
 }
 
 class Component {
-    constructor(renderHookId) {
+    constructor(renderHookId, shouldRender = true) {
         this.hookId = renderHookId;
+        if (shouldRender) {
+            this.render();
+        }
     }
+
+    render() {}
 
     createRootElement(tag, cssClasses, attributes) {
         const rootElement = document.createElement(tag);
@@ -39,8 +44,9 @@ class Component {
 
 class ProductItem extends Component {
     constructor(product, renderHookId) {
-        super(renderHookId);
+        super(renderHookId, false);
         this.product = product;
+        this.render();
     }
 
     addToCart() {
@@ -106,54 +112,66 @@ class ShoppingCart extends Component {
 }
 
 class ProductList extends Component {
-    products = [
-        new Product(
-            "Iphone 17 promax",
-            30.187,
-            "iPhone 17 sở hữu thiết kế sang trọng, màn hình Super Retina XDR sắc nét và chip A19 Bionic mạnh mẽ. Hiệu năng vượt trội, camera chụp đêm ấn tượng và pin bền bỉ mang đến trải nghiệm đẳng cấp.",
-            "https://cdn2.cellphones.com.vn/358x/media/catalog/product/i/p/iphone_17_pro_512gb.jpg"
-        ),
-        new Product(
-            "Iphone 16 promax",
-            20.187,
-            "iPhone 16 có thiết kế tinh tế, màn hình sáng rõ và hiệu năng mạnh mẽ nhờ chip A18 Bionic. Camera cải tiến giúp chụp ảnh sắc nét trong mọi điều kiện, pin dung lượng cao cho thời gian sử dụng lâu dài.",
-            "https://bachlongstore.vn/vnt_upload/product/09_2024/8447141_Apple_iPhone_16_Pro_finish_lineup_240909.png"
-        ),
-        new Product(
-            "Iphone 15 promax",
-            16.187,
-            "iPhone 16 sở hữu thiết kế sang trọng, màn hình Super Retina XDR sắc nét và chip A19 Bionic mạnh mẽ. Hiệu năng vượt trội, camera chụp đêm ấn tượng và pin bền bỉ mang đến trải nghiệm đẳng cấp.",
-            "https://cdn2.cellphones.com.vn/358x/media/catalog/product/i/p/iphone_17_pro_512gb.jpg"
-        ),
-    ];
+    products = [];
     constructor(renderHookId) {
         super(renderHookId);
+        this.fetchProducts();
+    }
+
+    fetchProducts() {
+        this.products = [
+            new Product(
+                "Iphone 17 promax",
+                30.187,
+                "iPhone 17 sở hữu thiết kế sang trọng, màn hình Super Retina XDR sắc nét và chip A19 Bionic mạnh mẽ. Hiệu năng vượt trội, camera chụp đêm ấn tượng và pin bền bỉ mang đến trải nghiệm đẳng cấp.",
+                "https://cdn2.cellphones.com.vn/358x/media/catalog/product/i/p/iphone_17_pro_512gb.jpg"
+            ),
+            new Product(
+                "Iphone 16 promax",
+                20.187,
+                "iPhone 16 có thiết kế tinh tế, màn hình sáng rõ và hiệu năng mạnh mẽ nhờ chip A18 Bionic. Camera cải tiến giúp chụp ảnh sắc nét trong mọi điều kiện, pin dung lượng cao cho thời gian sử dụng lâu dài.",
+                "https://bachlongstore.vn/vnt_upload/product/09_2024/8447141_Apple_iPhone_16_Pro_finish_lineup_240909.png"
+            ),
+            new Product(
+                "Iphone 15 promax",
+                16.187,
+                "iPhone 16 sở hữu thiết kế sang trọng, màn hình Super Retina XDR sắc nét và chip A19 Bionic mạnh mẽ. Hiệu năng vượt trội, camera chụp đêm ấn tượng và pin bền bỉ mang đến trải nghiệm đẳng cấp.",
+                "https://cdn2.cellphones.com.vn/358x/media/catalog/product/i/p/iphone_17_pro_512gb.jpg"
+            ),
+        ];
+        this.renderProducts();
+    }
+
+    renderProducts() {
+        for (const product of this.products) {
+            new ProductItem(product, "prod-list");
+        }
     }
 
     render() {
         const prodList = this.createRootElement("ul");
         prodList.id = "prod-list";
         prodList.classList.add("row", "g-3");
-        for (const product of this.products) {
-            const productItem = new ProductItem(product, "prod-list");
-            productItem.render();
+        if (this.products && this.products.length > 0) {
+            this.renderProducts;
         }
     }
 }
 
-class Shop {
+class Shop extends Component {
+    constructor() {
+        super();
+    }
+
     render() {
         this.cart = new ShoppingCart("app");
-        this.cart.render();
-        const productList = new ProductList("app");
-        productList.render();
+        new ProductList("app");
     }
 }
 
 class App {
     static init() {
         const shop = new Shop();
-        shop.render();
         this.cart = shop.cart;
     }
 
