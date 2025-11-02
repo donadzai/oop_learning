@@ -74,7 +74,13 @@ class ProductItem extends Component {
 
 class ShoppingCart extends Component {
     constructor(renderHookId) {
-        super(renderHookId);
+        super(renderHookId, false);
+        this.orderProducts = () => {
+            console.log("order now");
+            console.log(this.items);
+        };
+
+        this.render();
     }
 
     items = [];
@@ -97,6 +103,11 @@ class ShoppingCart extends Component {
         this.cartItems = updateItems;
     }
 
+    // orderProducts() {
+    //     console.log("order now");
+    //     console.log(this.items);
+    // }
+
     render() {
         const cartEl = this.createRootElement("div", "cart");
         cartEl.className = "cart";
@@ -107,6 +118,11 @@ class ShoppingCart extends Component {
                 <button href="#" class="btn btn-primary">Mua ngay</button>
             </div>
         `;
+        const orderButton = cartEl.querySelector("button");
+        // orderButton.addEventListener("click", this.orderProducts.bind(this));
+        orderButton.addEventListener("click", this.orderProducts);
+        // Cách 2:
+        // orderButton.addEventListener("click", () => this.orderProducts());
         this.totalOutput = cartEl.querySelector("p");
     }
 }
