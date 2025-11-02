@@ -128,14 +128,15 @@ class ShoppingCart extends Component {
 }
 
 class ProductList extends Component {
-    products = [];
+    #products = [];
     constructor(renderHookId) {
-        super(renderHookId);
-        this.fetchProducts();
+        super(renderHookId, false);
+        this.render();
+        this.#fetchProducts();
     }
 
-    fetchProducts() {
-        this.products = [
+    #fetchProducts() {
+        this.#products = [
             new Product(
                 "Iphone 17 promax",
                 30.187,
@@ -159,7 +160,7 @@ class ProductList extends Component {
     }
 
     renderProducts() {
-        for (const product of this.products) {
+        for (const product of this.#products) {
             new ProductItem(product, "prod-list");
         }
     }
@@ -168,7 +169,7 @@ class ProductList extends Component {
         const prodList = this.createRootElement("ul");
         prodList.id = "prod-list";
         prodList.classList.add("row", "g-3");
-        if (this.products && this.products.length > 0) {
+        if (this.#products && this.#products.length > 0) {
             this.renderProducts;
         }
     }
